@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Verilerini Göster</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+        }
+
+        h1, h2 {
+            color: #333;
+            text-align: center;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            background-color: #fff;
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Siparişlerin Müşteri Kimlikleri</h1>
+    <ul id="customerList"></ul>
+
+    <script>
+        const apiUrl = "https://northwind.vercel.app/api/orders";
+
+        fetch(apiUrl)
+          .then((response) => response.json())
+          .then((data) => {
+            const customerIds = data.map((order) => order.customerId);
+
+            const ul = document.getElementById("customerList");
+
+            customerIds.forEach((customerId, index) => {
+              const li = document.createElement("li");
+              li.textContent = `#${index + 1} - Müşteri Kimliği: ${customerId}`;
+              ul.appendChild(li);
+            });
+          })
+          .catch((error) => {
+            console.error("Verileri alırken bir hata oluştu:", error);
+          });
+    </script>
+</body>
+</html>

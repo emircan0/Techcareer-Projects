@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geciken Siparişler</title>
+</head>
+<body>
+    <h1>Geciken Siparişler</h1>
+    <script>
+        const apiUrl = "https://northwind.vercel.app/api/orders";
+        const delayThresholdInDays = 7;
+        fetch(apiUrl)
+          .then((response) => response.json())
+          .then((data) => {
+            const delayedOrders = data.filter((order) => {
+              const requiredDate = new Date(order.requiredDate);
+              const shippedDate = new Date(order.shippedDate);
+              const daysDiff = Math.floor((shippedDate - requiredDate) / (1000 * 60 * 60 * 24));
+              return daysDiff > delayThresholdInDays;
+            });
+            console.log("Geciken Siparişler:");
+            delayedOrders.forEach((order) => {
+              const requiredDate = new Date(order.requiredDate); 
+              const shippedDate = new Date(order.shippedDate);
+              const daysDiff = Math.floor((shippedDate - requiredDate) / (1000 * 60 * 60 * 24));
+              console.log(`Sipariş ID: ${order.id}`);
+              console.log(`Müşteri ID: ${order.customerId}`);
+              console.log(`Sipariş Tarihi: ${order.requiredDate}`);
+              console.log(`Gecikme Süresi (Gün): ${daysDiff} gün\n`);
+            });
+          })
+          .catch((error) => {
+            console.error("Verileri alırken bir hata oluştu:", error);
+          });
+    </script>
+</body>
+</html>
