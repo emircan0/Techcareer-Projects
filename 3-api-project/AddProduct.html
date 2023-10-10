@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ürün Ekleme</title>
+    <link rel="stylesheet" href="AddStyle.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Ürün Ekleme</h1>
+        <form id="productForm">
+            <label for="name">Ürün Adı:</label>
+            <input type="text" id="name" placeholder="Ürün Adı" required>
+            
+            <label for="unitPrice">Fiyat:</label>
+            <input type="number" id="unitPrice" placeholder="Fiyat" required>
+            
+            <label for="unitsInStock">Stok Miktarı:</label>
+            <input type="number" id="unitsInStock" placeholder="Stok Miktarı" required>
+            
+            <label for="categoryId">Kategori ID:</label>
+            <input type="number" id="categoryId" placeholder="Kategori ID" required>
+            
+            <button type="button" id="addButton">Ürün Ekle</button>
+        </form>
+        <div id="resultMessage"></div>
+    </div>
+
+    <script>
+        document.getElementById('addButton').addEventListener('click', postData);
+
+        function postData() {
+            const name = document.getElementById('name').value;
+            const unitPrice = document.getElementById('unitPrice').value;
+            const unitsInStock = document.getElementById('unitsInStock').value;
+            const categoryId = document.getElementById('categoryId').value;
+
+            const data = {
+                name,
+                unitPrice,
+                unitsInStock,
+                categoryId
+            };
+
+            fetch('https://northwind.vercel.app/api/products', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                const resultMessage = document.getElementById('resultMessage');
+                if (response.status === 201) {
+                    resultMessage.textContent = 'Ürün başarıyla eklendi.';
+                    resultMessage.className = 'success';
+                } else {
+                    resultMessage.textContent = 'Ürün eklenemedi.';
+                    resultMessage.className = 'error';
+                }
+            })
+            .catch(error => {
+                const resultMessage = document.getElementById('resultMessage');
+                resultMessage.textContent = 'Hata oluştu: ' + error.message;
+                resultMessage.className = 'error';
+            });
+        }
+    </script>
+</body>
+</html>

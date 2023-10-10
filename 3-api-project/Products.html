@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ürün Listesi</title>
+    <link rel="stylesheet" href="ProductsStyle.css">
+</head>
+<body>
+    <header class="custom-header">
+        <h1>Ürün Listesi</h1>
+    </header>
+    <div class="container">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Ürün Adı</th>
+                    <th>Birim Fiyat</th>
+                    <th>Stok Miktarı</th>
+                    <th>Kategori ID</th>
+                </tr>
+            </thead>
+            <tbody id="productTableBody"></tbody>
+        </table>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        axios.get('https://northwind.vercel.app/api/products')
+            .then(response => {
+                const productTableBody = document.getElementById('productTableBody');
+                const data = response.data;
+                data.forEach(product => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td>${product.name}</td>
+                                     <td>${product.unitPrice}</td>
+                                     <td>${product.unitsInStock}</td>
+                                     <td>${product.categoryId}</td>`;
+                    productTableBody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('Hata oluştu:', error);
+            });
+    </script>
+</body>
+</html>
